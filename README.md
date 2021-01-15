@@ -1,5 +1,5 @@
-# ark-notifier
-A simple bot to track logs on your *ARK: Survival Evolved* game server
+# ark-notify
+A discord bot to notify events what's going on your *Ark: Survival Evolved* server. Use webhook to send notifications. Requires to watch entire server logs.
 
 ## Features
 This program can track your logs on ARK game server. When new lines are comming, the program send a notification with added lines using webhook.
