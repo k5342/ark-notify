@@ -8,7 +8,6 @@ import (
 	"sync"
 	"github.com/joho/godotenv"
 	"github.com/fsnotify/fsnotify"
-	"ark-notify/webhook"
 )
 
 type ArkNotifier struct {
@@ -55,10 +54,18 @@ func (an *ArkNotifier) onLogFileUpdated(path string){
 		log.Println("error while ReadAll:", err)
 		return
 	}
-	log.Printf("read %d bytes: %s", len(logs), string(logs))
+	logLine := string(logs)
+	log.Printf("read %d bytes: %s", len(logs), logLine)
 	an.LogSizeTable[path] += int64(len(logs))
 	
-	webhook.SendWebhook(an.WebhookURL, string(logs))
+	event, err := ParseEventFromLogLine(logLine)
+	if err != nil {
+		log.Printf("error while parsing logline: %s", err.Error());
+		return
+	}
+	log.Printf("%#v\n", event)
+	
+	an.NotifyEvent(event)
 }
 
 func (an *ArkNotifier) Watch(){
