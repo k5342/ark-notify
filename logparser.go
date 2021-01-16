@@ -5,6 +5,7 @@ import (
 	"errors"
 	"time"
 	"log"
+	"ark-notify/event"
 )
 
 func validateLogLine(logLine string) (error) {
@@ -21,8 +22,8 @@ func validateLogLine(logLine string) (error) {
 	return nil
 }
 
-func ParseEventFromLogLine(logLine string) (*ArkEvent, error) {
-	ae := ArkEvent{}
+func ParseEventFromLogLine(logLine string) (*event.ArkEvent, error) {
+	ae := event.ArkEvent{}
 	var err error
 	if err = validateLogLine(logLine); err != nil {
 		return nil, errors.New("log format validation failed. maybe log format was changed?")
@@ -36,17 +37,17 @@ func ParseEventFromLogLine(logLine string) (*ArkEvent, error) {
 	ae.Timestamp = ts
 	// detect event kind
 	if (strings.Contains(logLine, " was killed")) {
-		ae.Kind = KillEvent
+		ae.Kind = event.KillEvent
 	} else if (strings.Contains(logLine, " Tamed a")) {
-		ae.Kind = TameEvent
+		ae.Kind = event.TameEvent
 	} else if (strings.Contains(logLine, " AdminCmd: ")) {
-		ae.Kind = AdminCmdEvent
+		ae.Kind = event.AdminCmdEvent
 	} else if (strings.Contains(logLine, " joined this ARK")) {
-		ae.Kind = JoinEvent
+		ae.Kind = event.JoinEvent
 	} else if (strings.Contains(logLine, " left this ARK")) {
-		ae.Kind = LeaveEvent
+		ae.Kind = event.LeaveEvent
 	} else {
-		ae.Kind = DefaultEvent
+		ae.Kind = event.DefaultEvent
 	}
 	ae.RawLog = logLine
 	return &ae, nil

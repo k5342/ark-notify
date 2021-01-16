@@ -1,29 +1,30 @@
-package main
+package discord
 
 import (
 	"fmt"
 	"github.com/bwmarrin/discordgo"
+	"ark-notify/event"
 )
 
-func GenerateEmbedFromEvent(ae *ArkEvent) (discordgo.MessageEmbed) {
+func GenerateEmbedFromEvent(ae *event.ArkEvent) (discordgo.MessageEmbed) {
 	embed := discordgo.MessageEmbed{}
 	switch ae.Kind {
-	case KillEvent:
+	case event.KillEvent:
 		embed.Title = "Killed"
 		embed.Color = 0xb36f6f
-	case TameEvent:
+	case event.TameEvent:
 		embed.Title = "Tamed"
 		embed.Color = 0x4db329
-	case AdminCmdEvent:
+	case event.AdminCmdEvent:
 		embed.Title = "AdminCmd"
 		embed.Color = 0x828282
-	case JoinEvent:
+	case event.JoinEvent:
 		embed.Title = "User Joined"
 		embed.Color = 0x3496fe
-	case LeaveEvent:
+	case event.LeaveEvent:
 		embed.Title = "User Left"
 		embed.Color = 0x8dacce
-	case DefaultEvent:
+	case event.DefaultEvent:
 		fallthrough
 	default:
 		embed.Title = "New Event"
