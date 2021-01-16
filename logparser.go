@@ -31,8 +31,8 @@ func parseKillEvent(ae *event.ArkEvent, logLine string) {
 		return
 	}
 	ae.Info["Victim"] = m[1];
-	if m[2] != "" {
-		ae.Info["Assailant"] = m[2];
+	if m[3] != "" {
+		ae.Info["Assailant"] = m[3];
 	}
 }
 
