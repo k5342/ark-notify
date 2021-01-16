@@ -36,6 +36,24 @@ func parseKillEvent(ae *event.ArkEvent, logLine string) {
 	}
 }
 
+func parseJoinEvent(ae *event.ArkEvent, logLine string) {
+	r := regexp.MustCompile("(.+) joined this ARK")
+	m := r.FindStringSubmatch(logLine)
+	if m[0] == "" {
+		log.Println("parseJoinEvent", logLine)
+	}
+	ae.Info["Player"] = m[1];
+}
+
+func parseLeaveEvent(ae *event.ArkEvent, logLine string) {
+	r := regexp.MustCompile("(.+) left this ARK")
+	m := r.FindStringSubmatch(logLine)
+	if m[0] == "" {
+		log.Println("parseLeaveEvent", logLine)
+	}
+	ae.Info["Player"] = m[1];
+}
+
 func ParseEventFromLogLine(logLine string) (*event.ArkEvent, error) {
 	ae := event.ArkEvent{}
 	ae.Info = make(map[string]string)
@@ -62,8 +80,10 @@ func ParseEventFromLogLine(logLine string) (*event.ArkEvent, error) {
 		ae.Kind = event.AdminCmdEvent
 	} else if (strings.Contains(logLine, " joined this ARK")) {
 		ae.Kind = event.JoinEvent
+		parseJoinEvent(&ae, logBody)
 	} else if (strings.Contains(logLine, " left this ARK")) {
 		ae.Kind = event.LeaveEvent
+		parseLeaveEvent(&ae, logBody)
 	} else {
 		ae.Kind = event.DefaultEvent
 	}
