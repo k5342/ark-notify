@@ -5,6 +5,7 @@ import (
 	"errors"
 	"time"
 	"log"
+	"regexp"
 	"ark-notify/event"
 )
 
@@ -22,8 +23,22 @@ func validateLogLine(logLine string) (error) {
 	return nil
 }
 
+func parseKillEvent(ae *event.ArkEvent, logLine string) {
+	r := regexp.MustCompile("(.+ - Lvl \\d+ \\(.+\\)) was killed(| by an? (.+ - Lvl \\d+ .+))!")
+	m := r.FindStringSubmatch(logLine)
+	if m[0] == "" {
+		log.Println("parseKillEvent failed: ", logLine)
+		return
+	}
+	ae.Info["Victim"] = m[1];
+	if m[2] != "" {
+		ae.Info["Assailant"] = m[2];
+	}
+}
+
 func ParseEventFromLogLine(logLine string) (*event.ArkEvent, error) {
 	ae := event.ArkEvent{}
+	ae.Info = make(map[string]string)
 	var err error
 	if err = validateLogLine(logLine); err != nil {
 		return nil, errors.New("log format validation failed. maybe log format was changed?")
@@ -35,9 +50,12 @@ func ParseEventFromLogLine(logLine string) (*event.ArkEvent, error) {
 		return nil, errors.New("parse timestamp has failed:" + err.Error())
 	}
 	ae.Timestamp = ts
+	logBody := logLine[50:len(logLine)-1]
+	log.Print("logBody:", logBody)
 	// detect event kind
 	if (strings.Contains(logLine, " was killed")) {
 		ae.Kind = event.KillEvent
+		parseKillEvent(&ae, logBody)
 	} else if (strings.Contains(logLine, " Tamed a")) {
 		ae.Kind = event.TameEvent
 	} else if (strings.Contains(logLine, " AdminCmd: ")) {
