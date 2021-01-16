@@ -23,7 +23,7 @@ See go.mod file for additional dependencies.
 
 - `ARK_LOG_DIR=`  
 Set *directory* path to your ARK server logs are stored on. (example: `/home/steam/ARK/ShooterGame/Saved/Logs/`)
-- `DISCORD_WEBHOOK_URL`  
+- `DISCORD_WEBHOOK_URL=`  
 Set Webhook URL where you want to notify. You need to issue this URL manually from Discord App.
 
 ## LICENSE
