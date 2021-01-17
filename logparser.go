@@ -64,7 +64,7 @@ func ParseEventFromLogLine(logLine string) (*event.ArkEvent, error) {
 	// get timestamp
 	log.Println("time.Parse", logLine[1:24])
 	var ts time.Time
-	if ts, err = time.ParseInLocation("2006.01.02-15.04.05", logLine[1:20], time.Now().Location()); err != nil { // TODO: support milliseconds
+	if ts, err = time.Parse("2006.01.02-15.04.05", logLine[1:20]); err != nil { // TODO: support milliseconds
 		return nil, errors.New("parse timestamp has failed:" + err.Error())
 	}
 	ae.Timestamp = ts
