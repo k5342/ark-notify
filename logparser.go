@@ -26,7 +26,7 @@ func validateLogLine(logLine string) (error) {
 func parseKillEvent(ae *event.ArkEvent, logLine string) {
 	r := regexp.MustCompile("(.+ - Lvl \\d+ \\(.+\\)) was killed(| by an? (.+ - Lvl \\d+ .+))!")
 	m := r.FindStringSubmatch(logLine)
-	if m[0] == "" {
+	if len(m) == 0 {
 		log.Println("parseKillEvent failed: ", logLine)
 		return
 	}
@@ -39,7 +39,7 @@ func parseKillEvent(ae *event.ArkEvent, logLine string) {
 func parseJoinEvent(ae *event.ArkEvent, logLine string) {
 	r := regexp.MustCompile("(.+) joined this ARK")
 	m := r.FindStringSubmatch(logLine)
-	if m[0] == "" {
+	if len(m) == 0 {
 		log.Println("parseJoinEvent", logLine)
 	}
 	ae.Info["Player"] = m[1];
@@ -48,7 +48,7 @@ func parseJoinEvent(ae *event.ArkEvent, logLine string) {
 func parseLeaveEvent(ae *event.ArkEvent, logLine string) {
 	r := regexp.MustCompile("(.+) left this ARK")
 	m := r.FindStringSubmatch(logLine)
-	if m[0] == "" {
+	if len(m) == 0 {
 		log.Println("parseLeaveEvent", logLine)
 	}
 	ae.Info["Player"] = m[1];
