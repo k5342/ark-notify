@@ -24,7 +24,7 @@ func validateLogLine(logLine string) (error) {
 }
 
 func parseKillEvent(ae *event.ArkEvent, logLine string) {
-	r := regexp.MustCompile("(.+ - Lvl \\d+ \\(.+\\)) was killed( by ((an? |)(.+)|))!")
+	r := regexp.MustCompile("(.+ - Lvl \\d+ \\(.+\\)) was killed( by ((an? |)(.+)))?!")
 	m := r.FindStringSubmatch(logLine)
 	if len(m) == 0 {
 		log.Println("parseKillEvent failed: ", logLine)
